@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Live Countdown Timer (Target: 17 Oct 2026, 18:00)
+   1. Live Countdown Timer (Target: 19 Sep 2026, 18:00)
    -------------------------------------------------------------------------- */
 function initCountdown() {
-  const partyDate = new Date('2026-10-17T18:00:00').getTime();
+  const partyDate = new Date('2026-09-19T18:00:00').getTime();
 
   function update() {
     const now = new Date().getTime();
