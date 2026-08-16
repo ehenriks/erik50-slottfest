@@ -3,6 +3,7 @@
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  initPinLock();
   initCountdown();
   initNavigation();
   initToastmasterModal();
@@ -10,6 +11,55 @@ document.addEventListener('DOMContentLoaded', () => {
   initGreetingsWall();
   initForms();
 });
+
+/* --------------------------------------------------------------------------
+   0. PIN Code Lock (PIN: 1976)
+   -------------------------------------------------------------------------- */
+function initPinLock() {
+  const overlay = document.getElementById('pinOverlay');
+  const form = document.getElementById('pinForm');
+  const input = document.getElementById('pinInput');
+  const errorMsg = document.getElementById('pinError');
+
+  if (!overlay || !form || !input) return;
+
+  // Check if already unlocked in this session
+  if (sessionStorage.getItem('erik50_unlocked') === 'true') {
+    overlay.classList.add('unlocked');
+    return;
+  }
+
+  // Auto submit when 4 digits are typed
+  input.addEventListener('input', () => {
+    if (errorMsg) errorMsg.classList.remove('active');
+    if (input.value.length === 4) {
+      validatePin(input.value);
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    validatePin(input.value);
+  });
+
+  function validatePin(code) {
+    if (code === '1976') {
+      sessionStorage.setItem('erik50_unlocked', 'true');
+      overlay.classList.add('unlocked');
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 70,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+    } else {
+      if (errorMsg) errorMsg.classList.add('active');
+      input.value = '';
+      input.focus();
+    }
+  }
+}
 
 /* --------------------------------------------------------------------------
    1. Live Countdown Timer (Target: 19 Sep 2026, 18:00)

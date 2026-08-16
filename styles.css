@@ -715,3 +715,91 @@ h1, h2, h3, h4, .font-serif {
     display: block;
   }
 }
+
+/* ==========================================================================
+   PIN Code Lock Overlay System
+   ========================================================================== */
+.pin-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(8, 10, 16, 0.95) url('assets/castle_hero.png') no-repeat center top fixed;
+  background-size: cover;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
+}
+
+.pin-overlay.unlocked {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pin-card {
+  background: rgba(15, 18, 29, 0.94);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 3rem 2.2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(197, 160, 89, 0.25);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.pin-logo {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: var(--gold-light);
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+}
+
+.pin-input {
+  width: 180px;
+  padding: 0.75rem 1rem;
+  font-size: 2rem;
+  letter-spacing: 0.8rem;
+  text-align: center;
+  background: rgba(8, 10, 16, 0.95);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-sm);
+  color: var(--gold-light);
+  margin: 0 auto;
+  display: block;
+  font-family: var(--font-sans);
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: var(--gold-hover);
+  box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+}
+
+.pin-error {
+  color: #f87171;
+  font-size: 0.85rem;
+  margin-top: 0.8rem;
+  display: none;
+  font-weight: 500;
+}
+
+.pin-error.active {
+  display: block;
+  animation: pinShake 0.4s ease;
+}
+
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}

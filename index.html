@@ -11,6 +11,21 @@
 </head>
 <body>
 
+  <!-- PIN Code Lock Overlay (1976) -->
+  <div class="pin-overlay" id="pinOverlay">
+    <div class="pin-card">
+      <div class="pin-logo">Erik 50 år</div>
+      <h2 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 0.5rem;">Välkommen!</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.8rem;">Ange PIN-kod för att låsa upp inbjudan</p>
+      
+      <form id="pinForm">
+        <input type="password" id="pinInput" class="pin-input" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="••••" autocomplete="off" autofocus required>
+        <div class="pin-error" id="pinError">Felaktig kod, försök igen</div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Lås Upp</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Floating Navigation -->
   <nav class="navbar" id="navbar">
     <a href="#hero" class="navbar-brand">Erik 50 år</a>
