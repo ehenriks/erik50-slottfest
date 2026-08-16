@@ -46,6 +46,7 @@ function initPinLock() {
     if (code === '1976') {
       sessionStorage.setItem('erik50_unlocked', 'true');
       overlay.classList.add('unlocked');
+      window.scrollTo({ top: 0, behavior: 'instant' });
       if (typeof confetti === 'function') {
         confetti({
           particleCount: 70,
