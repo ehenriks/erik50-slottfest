@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initNavigation();
   initToastmasterModal();
+  initCalendarButton();
   initSongWishlist();
   initGreetingsWall();
   initForms();
@@ -321,4 +322,67 @@ function escapeHTML(str) {
   return str.replace(/[&<>'"]/g, 
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
   );
+}
+
+/* --------------------------------------------------------------------------
+   8. Add to Calendar (iPhone / Android / Google / iCal)
+   -------------------------------------------------------------------------- */
+function initCalendarButton() {
+  const openBtn = document.getElementById('addToCalendarBtn');
+  const modal = document.getElementById('calendarModal');
+  const closeBtn = document.getElementById('closeCalendarModalBtn');
+  const downloadIcsBtn = document.getElementById('downloadIcsBtn');
+
+  if (openBtn && modal) {
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+  }
+
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+  }
+
+  if (downloadIcsBtn) {
+    downloadIcsBtn.addEventListener('click', () => {
+      const icsData = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Erik 50//Jubileumsfest//SV',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        'SUMMARY:Erik 50 År – Jubileumsfest',
+        'DESCRIPTION:Varmt välkommen till Eriks 50-årsjubileum på Ljunglöfska Slottet!\\n\\nKod: 1976\\nWebbplats: https://erik50.com\\n\\nKl 18:00 Skål på balkongen!',
+        'LOCATION:Ljunglöfska Slottet\\, Ljunglöfsvägen 1\\, 168 47 Bromma',
+        'DTSTART:20260919T160000Z',
+        'DTEND:20260919T230000Z',
+        'URL:https://erik50.com',
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', 'Erik50_Jubileumsfest.ics');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Kalenderfil (.ics) sparades! Kod: 1976');
+      if (modal) modal.classList.remove('active');
+    });
+  }
 }
