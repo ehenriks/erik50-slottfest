@@ -328,14 +328,15 @@ function escapeHTML(str) {
    8. Add to Calendar (iPhone / Android / Google / iCal)
    -------------------------------------------------------------------------- */
 function initCalendarButton() {
-  const openBtn = document.getElementById('addToCalendarBtn');
   const modal = document.getElementById('calendarModal');
   const closeBtn = document.getElementById('closeCalendarModalBtn');
   const downloadIcsBtn = document.getElementById('downloadIcsBtn');
 
-  if (openBtn && modal) {
-    openBtn.addEventListener('click', () => {
-      modal.classList.add('active');
+  if (modal) {
+    document.querySelectorAll('#addToCalendarBtn, .addToCalendarBtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.classList.add('active');
+      });
     });
   }
 
