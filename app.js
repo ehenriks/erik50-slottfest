@@ -327,7 +327,15 @@ function initCalendarButton() {
   const downloadIcsBtn = document.getElementById('downloadIcsBtn');
   const openGoogleCalBtn = document.getElementById('openGoogleCalBtn');
 
-  const googleCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Eriks+50%C3%A5rs+fest&dates=20260919T160000Z/20260919T230000Z&details=Varmt+v%C3%A4lkommen+till+Eriks+50-%C3%A5rsjubileum%21%0A%0AKod%3A+1976%0AWebbplats%3A+https%3A%2F%2Ferik50.com%0A%0AKl+18%3A00+Sk%C3%A5l+p%C3%A5+balkongen%21&location=Ljungl%C3%B6fska+Slottet%2C+Ljungl%C3%B6fsv%C3%A4gen+1%2C+168+47+Bromma';
+  const calTitle = 'Eriks 50års fest';
+  const calDetails = 'Varmt välkommen till Eriks 50-årsjubileum på Ljunglöfska Slottet!\n\nKod: 1976\nWebbplats: https://erik50.com\n\nKl 18:00 Skål på balkongen!';
+  const calLocation = 'Ljunglöfska Slottet, Ljunglöfsvägen 1, 168 47 Bromma';
+
+  const googleCalUrl = 'https://calendar.google.com/calendar/r/eventedit?' +
+    'text=' + encodeURIComponent(calTitle) +
+    '&dates=20260919T160000Z/20260919T230000Z' +
+    '&details=' + encodeURIComponent(calDetails) +
+    '&location=' + encodeURIComponent(calLocation);
 
   if (modal) {
     document.querySelectorAll('#addToCalendarBtn, .addToCalendarBtn').forEach(btn => {
