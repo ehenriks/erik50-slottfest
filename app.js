@@ -331,8 +331,8 @@ function initCalendarButton() {
   const calDetails = 'Varmt välkommen till Eriks 50-årsjubileum på Ljunglöfska Slottet!\n\nKod: 1976\nWebbplats: https://erik50.com\n\nKl 18:00 Skål på balkongen!';
   const calLocation = 'Ljunglöfska Slottet, Ljunglöfsvägen 1, 168 47 Bromma';
 
-  const googleCalUrl = 'https://calendar.google.com/calendar/r/eventedit?' +
-    'text=' + encodeURIComponent(calTitle) +
+  const googleCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+    '&text=' + encodeURIComponent(calTitle) +
     '&dates=20260919T160000Z/20260919T230000Z' +
     '&details=' + encodeURIComponent(calDetails) +
     '&location=' + encodeURIComponent(calLocation);
@@ -393,8 +393,8 @@ function initCalendarButton() {
   }
 
   if (openGoogleCalBtn) {
+    openGoogleCalBtn.setAttribute('href', googleCalUrl);
     openGoogleCalBtn.addEventListener('click', () => {
-      window.open(googleCalUrl, '_blank', 'noopener,noreferrer');
       showToast('Öppnar Google Calendar... (Kod: 1976)');
       if (modal) modal.classList.remove('active');
     });
