@@ -48,13 +48,7 @@ function initPinLock() {
       sessionStorage.setItem('erik50_unlocked', 'true');
       overlay.classList.add('unlocked');
       window.scrollTo({ top: 0, behavior: 'instant' });
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 70,
-          spread: 80,
-          origin: { y: 0.6 }
-        });
-      }
+      triggerGoldenStarShower();
     } else {
       if (errorMsg) errorMsg.classList.add('active');
       input.value = '';
@@ -397,4 +391,51 @@ function initCalendarButton() {
       if (modal) modal.classList.remove('active');
     });
   }
+}
+
+/* --------------------------------------------------------------------------
+   9. Golden Star Shower Animation ("Stjärnregn")
+   -------------------------------------------------------------------------- */
+function triggerGoldenStarShower() {
+  if (typeof confetti !== 'function') return;
+
+  var duration = 3.5 * 1000;
+  var animationEnd = Date.now() + duration;
+  var defaults = { 
+    startVelocity: 35, 
+    spread: 360, 
+    ticks: 100, 
+    zIndex: 10000,
+    shapes: ['star'],
+    colors: ['#FFD700', '#C5A059', '#FFF8E7', '#FFFFFF', '#E6C875', '#F3E5AB']
+  };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  // Initial center burst
+  confetti(Object.assign({}, defaults, {
+    particleCount: 100,
+    origin: { y: 0.5 }
+  }));
+
+  // Cascading golden star shower from left and right top corners
+  var interval = setInterval(function() {
+    var timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    var particleCount = 45 * (timeLeft / duration);
+    confetti(Object.assign({}, defaults, { 
+      particleCount: particleCount, 
+      origin: { x: randomInRange(0.1, 0.4), y: Math.random() - 0.2 } 
+    }));
+    confetti(Object.assign({}, defaults, { 
+      particleCount: particleCount, 
+      origin: { x: randomInRange(0.6, 0.9), y: Math.random() - 0.2 } 
+    }));
+  }, 180);
 }
