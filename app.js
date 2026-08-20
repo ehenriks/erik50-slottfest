@@ -331,6 +331,9 @@ function initCalendarButton() {
   const modal = document.getElementById('calendarModal');
   const closeBtn = document.getElementById('closeCalendarModalBtn');
   const downloadIcsBtn = document.getElementById('downloadIcsBtn');
+  const openGoogleCalBtn = document.getElementById('openGoogleCalBtn');
+
+  const googleCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Eriks+50%C3%A5rs+fest&dates=20260919T160000Z/20260919T230000Z&details=Varmt+v%C3%A4lkommen+till+Eriks+50-%C3%A5rsjubileum%21%0A%0AKod%3A+1976%0AWebbplats%3A+https%3A%2F%2Ferik50.com%0A%0AKl+18%3A00+Sk%C3%A5l+p%C3%A5+balkongen%21&location=Ljungl%C3%B6fska+Slottet%2C+Ljungl%C3%B6fsv%C3%A4gen+1%2C+168+47+Bromma';
 
   if (modal) {
     document.querySelectorAll('#addToCalendarBtn, .addToCalendarBtn').forEach(btn => {
@@ -363,7 +366,7 @@ function initCalendarButton() {
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        'SUMMARY:Erik 50 År – Jubileumsfest',
+        'SUMMARY:Eriks 50års fest',
         'DESCRIPTION:Varmt välkommen till Eriks 50-årsjubileum på Ljunglöfska Slottet!\\n\\nKod: 1976\\nWebbplats: https://erik50.com\\n\\nKl 18:00 Skål på balkongen!',
         'LOCATION:Ljunglöfska Slottet\\, Ljunglöfsvägen 1\\, 168 47 Bromma',
         'DTSTART:20260919T160000Z',
@@ -377,12 +380,20 @@ function initCalendarButton() {
       const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute('download', 'Erik50_Jubileumsfest.ics');
+      link.setAttribute('download', 'Eriks_50ars_fest.ics');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
       showToast('Kalenderfil (.ics) sparades! Kod: 1976');
+      if (modal) modal.classList.remove('active');
+    });
+  }
+
+  if (openGoogleCalBtn) {
+    openGoogleCalBtn.addEventListener('click', () => {
+      window.open(googleCalUrl, '_blank', 'noopener,noreferrer');
+      showToast('Öppnar Google Calendar... (Kod: 1976)');
       if (modal) modal.classList.remove('active');
     });
   }
