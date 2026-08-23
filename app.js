@@ -327,8 +327,8 @@ function initCalendarButton() {
   const downloadIcsBtn = document.getElementById('downloadIcsBtn');
   const openGoogleCalBtn = document.getElementById('openGoogleCalBtn');
 
-  const calTitle = 'Eriks 50års fest';
-  const calDetails = 'Varmt välkommen till Eriks 50-årsjubileum på Ljunglöfska Slottet!\n\nKod: 1976\nWebbplats: https://erik50.com\n\nKl 18:00 Skål på balkongen!';
+  const calTitle = 'Eriks 50-årsfest';
+  const calDetails = 'Varmt välkommen till Eriks 50-årsfest på Ljunglöfska Slottet!\n\nKod: 1976\nWebbplats: https://erik50.com\n\nKl 18:00 Skål på balkongen!';
   const calLocation = 'Ljunglöfska Slottet, Ljunglöfsvägen 1, 168 47 Bromma';
 
   const googleCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
@@ -368,13 +368,28 @@ function initCalendarButton() {
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        'SUMMARY:Eriks 50års fest',
-        'DESCRIPTION:Varmt välkommen till Eriks 50-årsjubileum på Ljunglöfska Slottet!\\n\\nKod: 1976\\nWebbplats: https://erik50.com\\n\\nKl 18:00 Skål på balkongen!',
+        'SUMMARY:Eriks 50-årsfest',
+        'DESCRIPTION:Varmt välkommen till Eriks 50-årsfest på Ljunglöfska Slottet!\\n\\nKod: 1976\\nWebbplats: https://erik50.com\\n\\nKl 18:00 Skål på balkongen!',
         'LOCATION:Ljunglöfska Slottet\\, Ljunglöfsvägen 1\\, 168 47 Bromma',
         'DTSTART:20260919T160000Z',
         'DTEND:20260919T230000Z',
         'URL:https://erik50.com',
         'STATUS:CONFIRMED',
+        'BEGIN:VALARM',
+        'TRIGGER:-P1D',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Påminnelse: Eriks 50-årsfest imorgon!',
+        'END:VALARM',
+        'BEGIN:VALARM',
+        'TRIGGER:-PT1H',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Påminnelse: Eriks 50-årsfest om 1 timme!',
+        'END:VALARM',
+        'BEGIN:VALARM',
+        'TRIGGER:-PT0M',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Eriks 50-årsfest börjar nu! Kl 18:00 Skål på balkongen.',
+        'END:VALARM',
         'END:VEVENT',
         'END:VCALENDAR'
       ].join('\r\n');
@@ -382,12 +397,12 @@ function initCalendarButton() {
       const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute('download', 'Eriks_50ars_fest.ics');
+      link.setAttribute('download', 'Eriks_50arsfest.ics');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      showToast('Kalenderfil (.ics) sparades! Kod: 1976');
+      showToast('Kalenderfil (.ics) sparades med påminnelser! Kod: 1976');
       if (modal) modal.classList.remove('active');
     });
   }
