@@ -959,7 +959,9 @@ h1, h2, h3, h4, .font-serif {
    ========================================================================== */
 body.expired-mode #countdown,
 body.expired-mode #heroCalendarWrap,
-body.expired-mode .hero-calendar-wrap {
+body.expired-mode .hero-calendar-wrap,
+body.expired-mode #heroSkalSub,
+body.expired-mode .hero-skal-sub {
   display: none !important;
 }
 

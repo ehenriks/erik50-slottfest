@@ -119,12 +119,15 @@ function initCountdown() {
 function applyExpiredMode() {
   document.body.classList.add('expired-mode');
 
-  // Hide countdown & hero calendar wrap
+  // Hide countdown, hero calendar wrap & skål subtext
   const countdown = document.getElementById('countdown');
   if (countdown) countdown.style.display = 'none';
 
   const heroCal = document.getElementById('heroCalendarWrap');
   if (heroCal) heroCal.style.display = 'none';
+
+  const heroSkal = document.getElementById('heroSkalSub');
+  if (heroSkal) heroSkal.style.display = 'none';
 
   // Update navigation links: Middag at top, Fotoalbum & Youtube music, Toastmaster, Vägbeskrivning
   const navLinks = document.getElementById('navLinks');
