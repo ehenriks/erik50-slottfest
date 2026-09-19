@@ -952,8 +952,20 @@ h1, h2, h3, h4, .font-serif {
     margin-bottom: 0.2rem;
   }
 
-  .pin-input {
-    padding: 0.4rem 0.6rem;
-    font-size: 1.5rem;
-  }
 }
+
+/* ==========================================================================
+   EXPIRED / 00 MODE (POST-COUNTDOWN LAYOUT)
+   ========================================================================== */
+body.expired-mode #countdown,
+body.expired-mode #heroCalendarWrap,
+body.expired-mode .hero-calendar-wrap {
+  display: none !important;
+}
+
+body.expired-mode #om-festen,
+body.expired-mode #overnattning,
+body.expired-mode #presenter {
+  display: none !important;
+}
+

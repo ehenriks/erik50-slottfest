@@ -58,21 +58,41 @@ function initPinLock() {
 }
 
 /* --------------------------------------------------------------------------
-   1. Live Countdown Timer (Target: 19 Sep 2026, 18:00)
+   1. Live Countdown Timer & Post-Countdown (00 Mode) Handler
    -------------------------------------------------------------------------- */
 function initCountdown() {
   const partyDate = new Date('2026-09-19T18:00:00').getTime();
+
+  function checkExpired() {
+    const path = window.location.pathname.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    const isZeroRoute = path.endsWith('/00') || 
+                        path.endsWith('/00.html') || 
+                        path.includes('/00/') || 
+                        search.includes('mode=00') || 
+                        document.body.classList.contains('expired-mode') || 
+                        document.body.hasAttribute('data-expired');
+
+    const now = new Date().getTime();
+    const distance = partyDate - now;
+
+    if (isZeroRoute || distance <= 0) {
+      applyExpiredMode();
+      return true;
+    }
+    return false;
+  }
+
+  if (checkExpired()) {
+    return;
+  }
 
   function update() {
     const now = new Date().getTime();
     const distance = partyDate - now;
 
-    if (distance < 0) {
-      document.getElementById('countdown').innerHTML = `
-        <div style="font-size: 1.5rem; color: var(--gold-light); font-weight: 500;">
-          Jubileet pågår
-        </div>
-      `;
+    if (distance <= 0) {
+      applyExpiredMode();
       return;
     }
 
@@ -81,14 +101,79 @@ function initCountdown() {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
-    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-    document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
-    document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+    const dEl = document.getElementById('cd-days');
+    const hEl = document.getElementById('cd-hours');
+    const mEl = document.getElementById('cd-minutes');
+    const sEl = document.getElementById('cd-seconds');
+
+    if (dEl) dEl.textContent = String(days).padStart(2, '0');
+    if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+    if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+    if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
   }
 
   update();
   setInterval(update, 1000);
+}
+
+function applyExpiredMode() {
+  document.body.classList.add('expired-mode');
+
+  // Hide countdown & hero calendar wrap
+  const countdown = document.getElementById('countdown');
+  if (countdown) countdown.style.display = 'none';
+
+  const heroCal = document.getElementById('heroCalendarWrap');
+  if (heroCal) heroCal.style.display = 'none';
+
+  // Update navigation links: Middag at top, Fotoalbum & Youtube music, Toastmaster, Vägbeskrivning
+  const navLinks = document.getElementById('navLinks');
+  if (navLinks) {
+    navLinks.innerHTML = `
+      <li><a href="#mat-och-dryck" class="nav-link">Middag</a></li>
+      <li><a href="#bilder" class="nav-link">Fotoalbum</a></li>
+      <li><a href="#musik" class="nav-link">YouTube Music</a></li>
+      <li><a href="#toastmaster" class="nav-link">Toastmaster</a></li>
+      <li><a href="#hitta-hit" class="nav-link">Vägbeskrivning</a></li>
+    `;
+
+    // Re-bind menu click handler for mobile drawer auto-close
+    navLinks.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('mobile-open');
+      });
+    });
+  }
+
+  // Re-order main sections in DOM:
+  // Middag (#mat-och-dryck) -> Fotoalbum & YouTube Music (#musik-sektion) -> Toastmaster (#toastmaster) -> Vägbeskrivning (#hitta-hit)
+  const main = document.querySelector('main');
+  const matOchDryck = document.getElementById('mat-och-dryck');
+  const musikSektion = document.getElementById('musik-sektion');
+  const toastmaster = document.getElementById('toastmaster');
+  const hittaHit = document.getElementById('hitta-hit');
+
+  if (main && matOchDryck && musikSektion && toastmaster && hittaHit) {
+    main.appendChild(matOchDryck);
+    main.appendChild(musikSektion);
+    main.appendChild(toastmaster);
+    main.appendChild(hittaHit);
+  }
+
+  // Re-order cards inside #musik-sektion grid: Fotoalbum first, YouTube Music second
+  if (musikSektion) {
+    const grid = musikSektion.querySelector('.grid-2');
+    const bilderAnchor = document.getElementById('bilder');
+    const musikAnchor = document.getElementById('musik');
+
+    const bilderCard = bilderAnchor ? bilderAnchor.closest('.grid-2 > div') : null;
+    const musikCard = musikAnchor ? musikAnchor.closest('.grid-2 > div') : null;
+
+    if (grid && bilderCard && musikCard) {
+      grid.appendChild(bilderCard);
+      grid.appendChild(musikCard);
+    }
+  }
 }
 
 /* --------------------------------------------------------------------------
