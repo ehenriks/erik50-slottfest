@@ -263,16 +263,39 @@
             </div>
           </div>
 
-          <!-- Card 2: Allergier & Förhinder -->
+          <!-- Card 2: Allergier & O.S.A. -->
           <div>
             <div style="text-align: center; margin-bottom: 1rem;">
-              <span class="sub-badge">INFORMATION</span>
+              <span class="sub-badge">INFORMATION & O.S.A.</span>
             </div>
             <div class="glass-card" style="display: flex; flex-direction: column; min-height: 100%;">
-              <h3 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 1rem; text-align: center;">Allergier & Förhinder</h3>
-              <p style="color: var(--text-muted); font-size: 0.98rem; line-height: 1.7;">
-                Vi har fångat upp de allergier vi känner till. Om vi har missat något, eller om du får förhinder, kontakta Pernilla snarast.
+              <h3 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 1rem; text-align: center;">Allergier & O.S.A.</h3>
+              <p style="color: var(--text-muted); font-size: 0.98rem; line-height: 1.7; margin-bottom: 1.2rem;" id="dyn_allergyNotice">
+                Vi har fångat upp de allergier vi känner till. Om vi har missat något, eller om du får förhinder, meddela oss nedan.
               </p>
+
+              <form id="rsvpForm" style="margin-top: 0.5rem;">
+                <div class="form-group">
+                  <label class="form-label">Ditt Namn</label>
+                  <input type="text" id="rsvpName" class="form-input" placeholder="För- och efternamn" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Kommer du?</label>
+                  <div class="radio-group">
+                    <label class="radio-label">
+                      <input type="radio" name="attendance" value="ja" checked> Ja, jag kommer!
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="attendance" value="nej"> Tyvärr förhinder
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Antal personer / Allergier / Meddelande</label>
+                  <input type="text" id="rsvpAllergies" class="form-input" placeholder="t.ex. 2 pers, nötallergiker">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Skicka O.S.A.</button>
+              </form>
             </div>
           </div>
         </div>
@@ -296,7 +319,7 @@
                 </p>
               </div>
               <div>
-                <a href="https://music.youtube.com/playlist?list=PLRODbdTjkqZs" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <a id="btn_youtubeMusic" href="https://music.youtube.com/playlist?list=PLRODbdTjkqZs" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
                   Öppna YouTube Music
                 </a>
               </div>
@@ -316,7 +339,7 @@
                 </p>
               </div>
               <div>
-                <a href="https://photos.app.goo.gl/XBhsaRKAiPdSsVVd6" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <a id="btn_googlePhotos" href="https://photos.app.goo.gl/XBhsaRKAiPdSsVVd6" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
                   Öppna Fotoalbumet
                 </a>
               </div>
@@ -340,8 +363,8 @@
 
               <div class="info-box">
                 <div class="info-details">
-                  <h4>Ljunglöfska Slottet</h4>
-                  <p><a href="https://maps.google.com/?q=Ljunglöfsvägen+1+Bromma" target="_blank" rel="noopener noreferrer" style="color: var(--gold-light); text-decoration: underline; font-weight: 500;">Ljunglöfsvägen 1</a>, 168 47 Bromma (Blackeberg)</p>
+                  <h4 id="dyn_venueName">Ljunglöfska Slottet</h4>
+                  <p><a id="dyn_venueAddressLink" href="https://maps.google.com/?q=Ljunglöfsvägen+1+Bromma" target="_blank" rel="noopener noreferrer" style="color: var(--gold-light); text-decoration: underline; font-weight: 500;">Ljunglöfsvägen 1</a>, 168 47 Bromma (Blackeberg)</p>
                 </div>
               </div>
 
@@ -369,9 +392,9 @@
             <div class="glass-card" style="display: flex; flex-direction: column; min-height: 100%; text-align: center;">
               <h3 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 1rem;">Slottets Placering</h3>
               <div style="width: 100%; height: 260px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-gold); margin-bottom: 1.2rem;">
-                <iframe src="https://maps.google.com/maps?q=Ljungl%C3%B6fska%20Slottet%2C%20Ljungl%C3%B6fsv%C3%A4gen%201%2C%20Bromma&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe id="dyn_venueEmbedMap" src="https://maps.google.com/maps?q=Ljungl%C3%B6fska%20Slottet%2C%20Ljungl%C3%B6fsv%C3%A4gen%201%2C%20Bromma&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
               </div>
-              <a href="https://maps.google.com/?q=Ljunglöfska+Slottet+Bromma" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="text-align: center;">
+              <a id="btn_googleMaps" href="https://maps.google.com/?q=Ljunglöfska+Slottet+Bromma" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="text-align: center;">
                 Öppna i Google Maps
               </a>
             </div>
@@ -385,8 +408,11 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-logo">Erik 50 | Ljunglöfska Slottet</div>
-      <p>© 2026 Erik 50-års Jubileum | Toastmaster Thomas Falkenström</p>
+      <div class="footer-logo" id="dyn_footerLogo">Erik 50 | Ljunglöfska Slottet</div>
+      <p id="dyn_footerCopyright">© 2026 Erik 50-års Jubileum | Toastmaster Thomas Falkenström</p>
+      <div style="margin-top: 1rem;">
+        <a href="admin.html" target="_blank" style="color: var(--text-dim); text-decoration: underline; font-size: 0.75rem;">⚙️ Admin Panel</a>
+      </div>
     </div>
   </footer>
 
@@ -406,7 +432,7 @@
         <button id="downloadIcsBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
           📱 Apple / iPhone / iCal (.ics)
         </button>
-        <a id="openGoogleCalBtn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Eriks+50-%C3%A5rsfest&dates=20260919T160000Z%2F20260919T230000Z&details=Varmt+v%C3%A4lkommen+till+Eriks+50-%C3%A5rsfest+p%C3%A5+Ljungl%C3%B6fska+Slottet%21%0A%0AKod%3A+1976%0AWebbplats%3A+https%3A%2F%2Ferik50.com%0A%0AKl+18%3A00+Sk%C3%A5l+p%C3%A5+balkongen%21&location=Ljungl%C3%B6fska+Slottet%2C+Ljungl%C3%B6fsv%C3%A4gen+1%2C+168+47+Bromma" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width: 100%; justify-content: center;">
+        <a id="openGoogleCalBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width: 100%; justify-content: center;">
           G Google Calendar
         </a>
       </div>
@@ -416,6 +442,7 @@
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 

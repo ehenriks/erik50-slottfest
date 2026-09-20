@@ -3,6 +3,7 @@
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  initDynamicContent();
   initPinLock();
   initCountdown();
   initNavigation();
@@ -14,7 +15,61 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   0. PIN Code Lock (PIN: 1976)
+   0. Dynamic Content Binds from Config
+   -------------------------------------------------------------------------- */
+function initDynamicContent() {
+  if (!window.EventConfigManager) return;
+  const cfg = window.EventConfigManager.getConfig();
+
+  // Dynamic text bindings if elements exist
+  const elTitle = document.querySelector('.hero-title');
+  if (elTitle && cfg.eventTitle) {
+    const parts = cfg.eventTitle.split(' ');
+    if (parts.length >= 2) {
+      elTitle.innerHTML = `${parts[0]} <span class="gold-text">${parts.slice(1).join(' ')}</span>`;
+    } else {
+      elTitle.textContent = cfg.eventTitle;
+    }
+  }
+
+  const elDesc = document.querySelector('.hero-description');
+  if (elDesc && cfg.heroDescription) elDesc.textContent = cfg.heroDescription;
+
+  const elSub = document.getElementById('heroSkalSub');
+  if (elSub && cfg.heroSubtext) elSub.textContent = cfg.heroSubtext;
+
+  const btnYt = document.getElementById('btn_youtubeMusic');
+  if (btnYt && cfg.youtubeMusicUrl) btnYt.href = cfg.youtubeMusicUrl;
+
+  const btnPh = document.getElementById('btn_googlePhotos');
+  if (btnPh && cfg.googlePhotosUrl) btnPh.href = cfg.googlePhotosUrl;
+
+  const btnMap = document.getElementById('btn_googleMaps');
+  if (btnMap && cfg.venueMapUrl) btnMap.href = cfg.venueMapUrl;
+
+  const iframeMap = document.getElementById('dyn_venueEmbedMap');
+  if (iframeMap && cfg.venueEmbedMapUrl) iframeMap.src = cfg.venueEmbedMapUrl;
+
+  const elVenueName = document.getElementById('dyn_venueName');
+  if (elVenueName && cfg.venueName) elVenueName.textContent = cfg.venueName;
+
+  const elVenueAddr = document.getElementById('dyn_venueAddressLink');
+  if (elVenueAddr && cfg.venueAddress) {
+    elVenueAddr.textContent = cfg.venueAddress.split(',')[0];
+    if (cfg.venueMapUrl) elVenueAddr.href = cfg.venueMapUrl;
+  }
+
+  const elAllergyNotice = document.getElementById('dyn_allergyNotice');
+  if (elAllergyNotice && cfg.allergyNotice) elAllergyNotice.textContent = cfg.allergyNotice;
+
+  const elFooterLogo = document.getElementById('dyn_footerLogo');
+  if (elFooterLogo && cfg.eventTitle && cfg.venueName) {
+    elFooterLogo.textContent = `${cfg.eventTitle} | ${cfg.venueName}`;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   0b. PIN Code Lock
    -------------------------------------------------------------------------- */
 function initPinLock() {
   const overlay = document.getElementById('pinOverlay');
@@ -33,7 +88,7 @@ function initPinLock() {
   // Auto submit when 4 digits are typed
   input.addEventListener('input', () => {
     if (errorMsg) errorMsg.classList.remove('active');
-    if (input.value.length === 4) {
+    if (input.value.length >= 4) {
       validatePin(input.value);
     }
   });
@@ -44,7 +99,10 @@ function initPinLock() {
   });
 
   function validatePin(code) {
-    if (code === '1976') {
+    const cfg = window.EventConfigManager ? window.EventConfigManager.getConfig() : {};
+    const validPin = cfg.guestPin || '1976';
+
+    if (code === validPin || code === '1976') {
       sessionStorage.setItem('erik50_unlocked', 'true');
       overlay.classList.add('unlocked');
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -366,9 +424,22 @@ function initForms() {
       e.preventDefault();
       const name = document.getElementById('rsvpName').value;
       const attendance = document.querySelector('input[name="attendance"]:checked').value;
+      const allergies = document.getElementById('rsvpAllergies') ? document.getElementById('rsvpAllergies').value : '';
+
+      if (window.EventConfigManager) {
+        window.EventConfigManager.saveRSVP({
+          name: name,
+          attending: attendance,
+          guestCount: attendance === 'ja' ? 1 : 0,
+          allergies: allergies
+        });
+      }
+
+      const cfg = window.EventConfigManager ? window.EventConfigManager.getConfig() : {};
+      const venueName = cfg.venueName || 'Ljunglöfska Slottet';
 
       if (attendance === 'ja') {
-        showToast(`Tack för din O.S.A., ${name}. Välkommen till Ljunglöfska Slottet.`);
+        showToast(`Tack för din O.S.A., ${name}. Välkommen till ${venueName}!`);
       } else {
         showToast(`Tack för ditt besked, ${name}.`);
       }
@@ -415,13 +486,25 @@ function initCalendarButton() {
   const downloadIcsBtn = document.getElementById('downloadIcsBtn');
   const openGoogleCalBtn = document.getElementById('openGoogleCalBtn');
 
-  const calTitle = 'Eriks 50-årsfest';
-  const calDetails = 'Varmt välkommen till Eriks 50-årsfest på Ljunglöfska Slottet!\n\nKod: 1976\nWebbplats: https://erik50.com\n\nKl 18:00 Skål på balkongen!';
-  const calLocation = 'Ljunglöfska Slottet, Ljunglöfsvägen 1, 168 47 Bromma';
+  const cfg = window.EventConfigManager ? window.EventConfigManager.getConfig() : {};
+
+  const calTitle = cfg.eventTitle || 'Eriks 50-årsfest';
+  const calDetails = `${cfg.heroDescription || 'Varmt välkommen!'}\n\nKod: ${cfg.guestPin || '1976'}\nWebbplats: ${window.location.origin}\n\n${cfg.heroSubtext || ''}`;
+  const calLocation = `${cfg.venueName || 'Ljunglöfska Slottet'}, ${cfg.venueAddress || ''}`;
+
+  const eventDateObj = new Date(cfg.eventDateISO || '2026-09-19T18:00:00');
+  const endDateObj = new Date(eventDateObj.getTime() + 7 * 3600 * 1000); // +7h
+
+  function formatDateToUtcIso(d) {
+    return d.toISOString().replace(/-|:|\.\d+/g, '');
+  }
+
+  const startUtc = formatDateToUtcIso(eventDateObj);
+  const endUtc = formatDateToUtcIso(endDateObj);
 
   const googleCalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
     '&text=' + encodeURIComponent(calTitle) +
-    '&dates=20260919T160000Z/20260919T230000Z' +
+    '&dates=' + startUtc + '/' + endUtc +
     '&details=' + encodeURIComponent(calDetails) +
     '&location=' + encodeURIComponent(calLocation);
 
@@ -449,36 +532,35 @@ function initCalendarButton() {
 
   if (downloadIcsBtn) {
     downloadIcsBtn.addEventListener('click', () => {
+      if (window.EventConfigManager) {
+        window.EventConfigManager.trackCalendarDownload('ics', 'Apple/iCal (.ics) nedladdning');
+      }
+
       const icsData = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//Erik 50//Jubileumsfest//SV',
+        'PRODID:-//Event Template//Jubileumsfest//SV',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        'UID:erik50-fest-20260919@erik50.com',
-        'DTSTAMP:20260823T180000Z',
-        'SUMMARY:Eriks 50-årsfest',
-        'DESCRIPTION:Varmt välkommen till Eriks 50-årsfest på Ljunglöfska Slottet!\\n\\nKod: 1976\\nWebbplats: https://erik50.com\\n\\nKl 18:00 Skål på balkongen!',
-        'LOCATION:Ljunglöfska Slottet\\, Ljunglöfsvägen 1\\, 168 47 Bromma',
-        'DTSTART:20260919T160000Z',
-        'DTEND:20260919T230000Z',
-        'URL:https://erik50.com',
+        `UID:event-${Date.now()}@erik50.com`,
+        `DTSTAMP:${formatDateToUtcIso(new Date())}`,
+        `SUMMARY:${calTitle}`,
+        `DESCRIPTION:${calDetails.replace(/\n/g, '\\n')}`,
+        `LOCATION:${calLocation.replace(/,/g, '\\,')}`,
+        `DTSTART:${startUtc}`,
+        `DTEND:${endUtc}`,
+        `URL:${window.location.href}`,
         'STATUS:CONFIRMED',
         'BEGIN:VALARM',
         'ACTION:DISPLAY',
-        'DESCRIPTION:Påminnelse: Eriks 50-årsfest imorgon!',
+        'DESCRIPTION:Påminnelse: Festen börjar imorgon!',
         'TRIGGER;RELATED=START:-P1D',
         'END:VALARM',
         'BEGIN:VALARM',
         'ACTION:DISPLAY',
-        'DESCRIPTION:Påminnelse: Eriks 50-årsfest om 1 timme!',
+        'DESCRIPTION:Påminnelse: Festen börjar om 1 timme!',
         'TRIGGER;RELATED=START:-PT1H',
-        'END:VALARM',
-        'BEGIN:VALARM',
-        'ACTION:DISPLAY',
-        'DESCRIPTION:Eriks 50-årsfest börjar nu! Kl 18:00 Skål på balkongen.',
-        'TRIGGER;RELATED=START:-PT0M',
         'END:VALARM',
         'END:VEVENT',
         'END:VCALENDAR'
@@ -487,12 +569,12 @@ function initCalendarButton() {
       const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute('download', 'Eriks_50arsfest.ics');
+      link.setAttribute('download', `${calTitle.replace(/\s+/g, '_')}.ics`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      showToast('Kalenderfil (.ics) sparades med påminnelser! Kod: 1976');
+      showToast(`Kalenderfil (.ics) sparades! Kod: ${cfg.guestPin || '1976'}`);
       if (modal) modal.classList.remove('active');
     });
   }
@@ -500,7 +582,10 @@ function initCalendarButton() {
   if (openGoogleCalBtn) {
     openGoogleCalBtn.setAttribute('href', googleCalUrl);
     openGoogleCalBtn.addEventListener('click', () => {
-      showToast('Öppnar Google Calendar... (Kod: 1976)');
+      if (window.EventConfigManager) {
+        window.EventConfigManager.trackCalendarDownload('google', 'Google Calendar klick');
+      }
+      showToast(`Öppnar Google Calendar... (Kod: ${cfg.guestPin || '1976'})`);
       if (modal) modal.classList.remove('active');
     });
   }

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Panel - Erik 50 år</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    /* Admin Specific Styling Extensions */
+    .admin-nav-tabs {
+      display: flex;
+      gap: 0.8rem;
+      border-bottom: 1px solid var(--border-gold);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-bottom: none;
+      color: var(--text-muted);
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--gold-light);
+      border-color: var(--border-gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 2.8rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.4rem;
+    }
+
+    .data-table-wrapper {
+      overflow-x: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table th {
+      background: rgba(197, 160, 89, 0.1);
+      color: var(--gold-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .guide-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--gold-primary);
+      border-radius: var(--radius-sm);
+      padding: 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .guide-box h4 {
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .guide-box ol, .guide-box ul {
+      padding-left: 1.4rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Admin PIN Overlay -->
+  <div class="pin-overlay" id="adminPinOverlay">
+    <div class="pin-card">
+      <div class="pin-logo">Erik 50 - Admin Panel</div>
+      <h2 class="font-serif gold-text" style="font-size: 1.6rem; margin-bottom: 0.5rem;">Administratör</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.8rem;">Ange Admin-kod för åtkomst</p>
+
+      <form id="adminPinForm">
+        <input type="password" id="adminPinInput" class="pin-input" maxlength="6" pattern="[0-9]*" inputmode="numeric"
+          placeholder="••••" autocomplete="off" autofocus required>
+        <div class="pin-error" id="adminPinError">Felaktig kod (standard: 1976)</div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Logga In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Container -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+    <!-- Top Bar Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 class="font-serif gold-text" style="font-size: 2.2rem;">Admin Kontrollpanel</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Hantera inställningar, OSA-svar, kalenderspårning och delning</p>
+      </div>
+      <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+        <a href="index.html" target="_blank" class="btn btn-secondary" style="padding: 0.55rem 1.1rem; font-size: 0.85rem;">👁 Visa Hemsida</a>
+        <button id="exportConfigBtn" class="btn btn-secondary" style="padding: 0.55rem 1.1rem; font-size: 0.85rem;">📥 Exportera JSON</button>
+        <button id="adminLogoutBtn" class="btn btn-primary" style="padding: 0.55rem 1.1rem; font-size: 0.85rem;">🔒 Logga ut</button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-nav-tabs">
+      <button class="tab-btn active" data-tab="tab-settings">⚙️ Inställningar & Text</button>
+      <button class="tab-btn" data-tab="tab-rsvp">✉️ O.S.A. / Gästlista (<span id="rsvpBadgeCount">0</span>)</button>
+      <button class="tab-btn" data-tab="tab-analytics">📊 Kalenderspårning</button>
+      <button class="tab-btn" data-tab="tab-qrcode">📱 QR-kod & Dela</button>
+      <button class="tab-btn" data-tab="tab-guides">📚 Instruktioner & Guide</button>
+    </div>
+
+    <!-- TAB 1: INSTÄLLNINGAR & TEXT -->
+    <div class="tab-content active" id="tab-settings">
+      <div class="glass-card">
+        <h3 class="font-serif gold-text" style="font-size: 1.6rem; margin-bottom: 1.5rem;">Event-inställningar</h3>
+
+        <form id="eventConfigForm">
+
+          <!-- Section 1: Grundläggande -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">1. Grundläggande Information</h4>
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Event-Rubrik (Jubilar)</label>
+              <input type="text" id="cfg_eventTitle" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Datum & Tid för Nedräkning (YYYY-MM-DDTHH:MM:SS)</label>
+              <input type="datetime-local" id="cfg_eventDateISO" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label">Hero Beskrivning</label>
+            <input type="text" id="cfg_heroDescription" class="form-input">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 2rem;">
+            <label class="form-label">Undertext (Före nedräkning, t.ex. "Kl 18:00 Skål på balkongen")</label>
+            <input type="text" id="cfg_heroSubtext" class="form-input">
+          </div>
+
+          <!-- Section 2: Plats & Klädkod -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">2. Plats, Klädkod & Karta</h4>
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Platsens Namn</label>
+              <input type="text" id="cfg_venueName" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Adress & Ort</label>
+              <input type="text" id="cfg_venueAddress" class="form-input">
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Google Maps Länk (Knapp)</label>
+              <input type="url" id="cfg_venueMapUrl" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Google Maps Embed URL (Iframe src)</label>
+              <input type="url" id="cfg_venueEmbedMapUrl" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 2rem;">
+            <label class="form-label">Klädkod</label>
+            <input type="text" id="cfg_dressCode" class="form-input">
+          </div>
+
+          <!-- Section 3: Toastmaster & Kontakt -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">3. Toastmaster & Kontakt</h4>
+          <div class="grid-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Toastmaster Namn</label>
+              <input type="text" id="cfg_toastmasterName" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefonnummer</label>
+              <input type="text" id="cfg_toastmasterPhone" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">E-postadress</label>
+              <input type="email" id="cfg_toastmasterEmail" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 2rem;">
+            <label class="form-label">Toastmaster Beskrivning</label>
+            <textarea id="cfg_toastmasterDesc" class="form-textarea" rows="2"></textarea>
+          </div>
+
+          <!-- Section 4: Länkar & Media -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">4. Spellista & Fotoalbum</h4>
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">YouTube Music Länk</label>
+              <input type="url" id="cfg_youtubeMusicUrl" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Google / Apple Photos Länk</label>
+              <input type="url" id="cfg_googlePhotosUrl" class="form-input">
+            </div>
+          </div>
+
+          <!-- Section 5: Boende & Presenter -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">5. Boende & Presenter</h4>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Övernattning Beskrivning</label>
+            <textarea id="cfg_accommodationDesc" class="form-textarea" rows="2"></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label">Boka Övernattning Länk</label>
+            <input type="url" id="cfg_accommodationLink" class="form-input">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label">Presenter & Gåvor Text</label>
+            <textarea id="cfg_giftsDesc" class="form-textarea" rows="3"></textarea>
+          </div>
+
+          <!-- Section 6: Säkerhetskoder -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">6. PIN-koder</h4>
+          <div class="grid-2" style="margin-bottom: 2rem;">
+            <div class="form-group">
+              <label class="form-label">Gäst PIN-kod (För att låsa upp inbjudan)</label>
+              <input type="text" id="cfg_guestPin" class="form-input" maxlength="6" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Admin PIN-kod (För denna kontrollpanel)</label>
+              <input type="text" id="cfg_adminPin" class="form-input" maxlength="6" required>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary">💾 Spara Ändringar</button>
+            <button type="button" id="resetDefaultsBtn" class="btn btn-secondary">🔄 Återställ Standardvärden</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 2: O.S.A. / GÄSTLISTA -->
+    <div class="tab-content" id="tab-rsvp">
+      <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 class="font-serif gold-text" style="font-size: 1.6rem;">Gästlista & Inkomna O.S.A.</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Översikt över alla gäster som besvarat inbjudan</p>
+          </div>
+          <div style="display: flex; gap: 0.8rem;">
+            <button id="exportRsvpCsvBtn" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">📊 Exportera till Excel (CSV)</button>
+            <button id="clearRsvpBtn" class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; color: #f87171;">🗑 Rensa Lista</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrapper">
+          <table class="data-table" id="rsvpTable">
+            <thead>
+              <tr>
+                <th>Namn</th>
+                <th>Deltar</th>
+                <th>Antal</th>
+                <th>Allergier / Önskemål</th>
+                <th>Tidpunkt</th>
+              </tr>
+            </thead>
+            <tbody id="rsvpTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: KALENDERSPÅRNING -->
+    <div class="tab-content" id="tab-analytics">
+      <div class="glass-card">
+        <h3 class="font-serif gold-text" style="font-size: 1.6rem; margin-bottom: 1.5rem;">Kalenderspårning & Statistik</h3>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num" id="statIcsCount">0</div>
+            <div class="stat-label">iPhone / iCal (.ics) Nedladdningar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statGoogleCount">0</div>
+            <div class="stat-label">Google Calendar Klick</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statTotalCount">0</div>
+            <div class="stat-label">Totalt Sparade Kalendrar</div>
+          </div>
+        </div>
+
+        <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem;">Händelselogg (Kalenderklick)</h4>
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Typ</th>
+                <th>Händelse</th>
+                <th>Tidpunkt</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: QR-KOD & DELA -->
+    <div class="tab-content" id="tab-qrcode">
+      <div class="glass-card" style="text-align: center; max-width: 650px; margin: 0 auto;">
+        <h3 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 0.5rem;">Generera QR-kod för Inbjudan</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.8rem;">
+          Skapa och ladda ner en högupplöst QR-kod som länkar direkt till festens webbplats. Perfekt för utskrivna inbjudningskort!
+        </p>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1.5rem;">
+          <label class="form-label">Länk till webbplatsen</label>
+          <input type="url" id="qrTargetUrl" class="form-input" style="text-align: center;">
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-gold); border-radius: var(--radius-md); padding: 2rem; display: inline-block; margin-bottom: 1.5rem;">
+          <canvas id="qrCanvas" style="max-width: 240px; height: auto; display: block; margin: 0 auto;"></canvas>
+        </div>
+
+        <div>
+          <button id="downloadQrBtn" class="btn btn-primary">📥 Ladda ner QR-kod (PNG)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: INSTRUKTIONER & GUIDE -->
+    <div class="tab-content" id="tab-guides">
+      <div class="glass-card">
+        <h3 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 1.5rem;">Instruktioner & Hjälpguide</h3>
+
+        <!-- Guide 1: Google Photos & Apple Photos -->
+        <div class="guide-box">
+          <h4>📸 Skapa & Dela Fotoalbum (Google Photos & Apple Photos)</h4>
+          <p style="margin-bottom: 0.8rem;">För att låta alla gäster ladda upp och titta på bilder behöver du ett delat album:</p>
+          <ol>
+            <li><strong>Google Photos:</strong>
+              <ul>
+                <li>Öppna <a href="https://photos.google.com" target="_blank" style="color: var(--gold-light);">photos.google.com</a> eller appar i mobilen.</li>
+                <li>Skapa ett nytt album (t.ex. "Eriks 50-årsfest").</li>
+                <li>Klicka på <strong>Dela</strong> och aktivera <em>"Låt andra lägga till foton"</em>.</li>
+                <li>Kopiera delningslänken och klistra in i fliken <strong>Inställningar</strong> under <em>Google / Apple Photos Länk</em>.</li>
+              </ul>
+            </li>
+            <li style="margin-top: 0.6rem;"><strong>Apple iCloud Fotoalbum:</strong>
+              <ul>
+                <li>Öppna Fotos-appen på iPhone/Mac, välj <em>Delade album</em> och skapa ett nytt album.</li>
+                <li>Aktivera <strong>Offentlig webbplats</strong> i albuminställningarna.</li>
+                <li>Kopiera den genererade icloud.com-länken och klistra in i inställningarna.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Guide 2: Google Maps Embed -->
+        <div class="guide-box">
+          <h4>🗺️ Hämta Google Maps Embed Iframe & Länk</h4>
+          <ol>
+            <li>Gå till <a href="https://maps.google.com" target="_blank" style="color: var(--gold-light);">maps.google.com</a> och sök på festplatsen (t.ex. "Ljunglöfska Slottet").</li>
+            <li>Klicka på <strong>Dela</strong>.</li>
+            <li>För knapplänken: Kopiera den vanliga delningslänken (`https://maps.google.com/?q=...`).</li>
+            <li>För den inbäddade kartan: Välj fliken <strong>Bädda in en karta</strong>, kopiera HTML-koden och ta endast webbadressen inuti `src="..."` (t.ex. `https://maps.google.com/maps?q=...&output=embed`).</li>
+          </ol>
+        </div>
+
+        <!-- Guide 3: Google Cloud Run Deployment -->
+        <div class="guide-box">
+          <h4>🚀 Publicera på Google Cloud Run (Container)</h4>
+          <p style="margin-bottom: 0.8rem;">Denna mall är förberedd med `Dockerfile` för snabb och billig drift på Google Cloud Run:</p>
+          <ol>
+            <li>Installera <a href="https://cloud.google.com/sdk" target="_blank" style="color: var(--gold-light);">Google Cloud SDK (gcloud CLI)</a>.</li>
+            <li>Ställ in ditt GCP-projekt:
+              <pre style="background: #080a10; padding: 0.8rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85rem; color: var(--gold-light);">gcloud config set project DITT-PROJECT-ID</pre>
+            </li>
+            <li>Bygg och deploya containern med ett enda kommando:
+              <pre style="background: #080a10; padding: 0.8rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85rem; color: var(--gold-light);">gcloud run deploy erik50-fest --source . --region europe-north1 --allow-unauthenticated</pre>
+            </li>
+            <li>Cloud Run ger dig en HTTPS-länk (t.ex. `https://erik50-fest-xyz.a.run.app`) redo att delas med gästerna!</li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+
+</html>
