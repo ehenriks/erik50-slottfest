@@ -44,6 +44,12 @@ function initDynamicContent() {
   const btnPh = document.getElementById('btn_googlePhotos');
   if (btnPh && cfg.googlePhotosUrl) btnPh.href = cfg.googlePhotosUrl;
 
+  const btnDoc = document.getElementById('btn_googleDocSchedule');
+  if (btnDoc && cfg.googleDocScheduleUrl) btnDoc.href = cfg.googleDocScheduleUrl;
+
+  const btnSld = document.getElementById('btn_googleSlidesSeating');
+  if (btnSld && cfg.googleSlidesSeatingUrl) btnSld.href = cfg.googleSlidesSeatingUrl;
+
   const btnMap = document.getElementById('btn_googleMaps');
   if (btnMap && cfg.venueMapUrl) btnMap.href = cfg.venueMapUrl;
 

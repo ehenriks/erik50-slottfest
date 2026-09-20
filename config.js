@@ -38,9 +38,11 @@ const DEFAULT_EVENT_CONFIG = {
   giftsTitle: "Födelsedagsönskan",
   giftsDesc: "Att du är med och firar min födelsedag är min present. För dig som ändå önskar ge något ligger Hjärnfonden (till minne av pappa som gick bort i ALS), Barncancerfonden och Tobiasregistret extra varmt om hjärtat. Utan cancerforskningen och registret hade livet kunnat se helt annorlunda ut.",
 
-  // Media Links
+  // Media Links & Dynamic Documents
   youtubeMusicUrl: "https://music.youtube.com/playlist?list=PLRODbdTjkqZs",
   googlePhotosUrl: "https://photos.app.goo.gl/XBhsaRKAiPdSsVVd6",
+  googleDocScheduleUrl: "https://docs.google.com/document/d/1QcX8h_0lAvoD1dcQDv-zKqouRQC9DM0yXYkoxqafVo0/edit",
+  googleSlidesSeatingUrl: "https://docs.google.com/presentation/d/1QcX8h_0lAvoD1dcQDv-zKqouRQC9DM0yXYkoxqafVo0/edit?slide=id.g3fb93d835c4_0_0#slide=id.g3fb93d835c4_0_0",
 
   // Contact for Allergies
   allergyNotice: "Vi har fångat upp de allergier vi känner till. Om vi har missat något, eller om du får förhinder, kontakta Pernilla snarast."

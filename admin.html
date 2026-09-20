@@ -260,8 +260,8 @@
             <textarea id="cfg_toastmasterDesc" class="form-textarea" rows="2"></textarea>
           </div>
 
-          <!-- Section 4: Länkar & Media -->
-          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">4. Spellista & Fotoalbum</h4>
+          <!-- Section 4: Länkar, Media & Dynamiska Dokument -->
+          <h4 style="color: var(--gold-light); font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">4. Media & Dynamiska Dokument (Google Docs / Slides)</h4>
           <div class="grid-2" style="margin-bottom: 1.5rem;">
             <div class="form-group">
               <label class="form-label">YouTube Music Länk</label>
@@ -270,6 +270,17 @@
             <div class="form-group">
               <label class="form-label">Google / Apple Photos Länk</label>
               <input type="url" id="cfg_googlePhotosUrl" class="form-input">
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Google Doc Tidsschema & Program Länk</label>
+              <input type="url" id="cfg_googleDocScheduleUrl" class="form-input" placeholder="https://docs.google.com/document/d/.../edit">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Google Slides Bordsplacering Länk (Sida 1 översikt + Utskrift)</label>
+              <input type="url" id="cfg_googleSlidesSeatingUrl" class="form-input" placeholder="https://docs.google.com/presentation/d/.../edit">
             </div>
           </div>
 
@@ -411,26 +422,28 @@
       <div class="glass-card">
         <h3 class="font-serif gold-text" style="font-size: 1.8rem; margin-bottom: 1.5rem;">Instruktioner & Hjälpguide</h3>
 
-        <!-- Guide 1: Google Photos & Apple Photos -->
+        <!-- Guide 1: Google Doc Tidsschema -->
         <div class="guide-box">
-          <h4>📸 Skapa & Dela Fotoalbum (Google Photos & Apple Photos)</h4>
-          <p style="margin-bottom: 0.8rem;">För att låta alla gäster ladda upp och titta på bilder behöver du ett delat album:</p>
+          <h4>📄 Skapa & Koppla Google Doc (Tidsschema & Eventinfo)</h4>
+          <p style="margin-bottom: 0.8rem;">Ett dynamiskt Google Doc för vad som sker när, tider, länk till anmälan och PIN-kod:</p>
           <ol>
-            <li><strong>Google Photos:</strong>
-              <ul>
-                <li>Öppna <a href="https://photos.google.com" target="_blank" style="color: var(--gold-light);">photos.google.com</a> eller appar i mobilen.</li>
-                <li>Skapa ett nytt album (t.ex. "Eriks 50-årsfest").</li>
-                <li>Klicka på <strong>Dela</strong> och aktivera <em>"Låt andra lägga till foton"</em>.</li>
-                <li>Kopiera delningslänken och klistra in i fliken <strong>Inställningar</strong> under <em>Google / Apple Photos Länk</em>.</li>
-              </ul>
-            </li>
-            <li style="margin-top: 0.6rem;"><strong>Apple iCloud Fotoalbum:</strong>
-              <ul>
-                <li>Öppna Fotos-appen på iPhone/Mac, välj <em>Delade album</em> och skapa ett nytt album.</li>
-                <li>Aktivera <strong>Offentlig webbplats</strong> i albuminställningarna.</li>
-                <li>Kopiera den genererade icloud.com-länken och klistra in i inställningarna.</li>
-              </ul>
-            </li>
+            <li>Öppna malldokumentet eller skapa ett nytt i <a href="https://docs.google.com" target="_blank" style="color: var(--gold-light);">Google Docs</a>.</li>
+            <li>Klicka på <strong>Arkiv -> Skapa en kopia</strong> för att spara en egen version i din Google Drive.</li>
+            <li>Uppdatera tider, program, länk till anmälningssidan samt PIN-kod.</li>
+            <li>Klicka på <strong>Dela (Dela med andra)</strong> längst upp till höger och ställ in <em>"Alla med länken kan visa"</em>.</li>
+            <li>Kopiera länken och klistra in i fliken <strong>Inställningar</strong> under <em>Google Doc Tidsschema Länk</em>.</li>
+          </ol>
+        </div>
+
+        <!-- Guide 2: Google Slides Bordsplacering -->
+        <div class="guide-box">
+          <h4>📊 Skapa & Koppla Google Slides (Bordsplacering & Utskrift)</h4>
+          <p style="margin-bottom: 0.8rem;">Ett dynamiskt Google Slides-dokument för utskrift av bordsplacering (Sida 1 är översikt över festlokalen/borden):</p>
+          <ol>
+            <li>Öppna mall-presentationen: <a href="https://docs.google.com/presentation/d/1QcX8h_0lAvoD1dcQDv-zKqouRQC9DM0yXYkoxqafVo0/edit?slide=id.g3fb93d835c4_0_0#slide=id.g3fb93d835c4_0_0" target="_blank" style="color: var(--gold-light);">Öppna Bordsplacering Mall (Google Slides)</a>.</li>
+            <li>Klicka på <strong>Arkiv -> Skapa en kopia -> Hela presentationen</strong>.</li>
+            <li><strong>Sida 1:</strong> Används för översikten av bordsplaceringen. Efterföljande sidor är bordskort för utskrift som uppdateras allt eftersom gästerna anmäler sig.</li>
+            <li>Klicka på <strong>Dela -> Kopiera länk</strong> och klistra in under <em>Google Slides Bordsplacering Länk</em> i fliken Inställningar.</li>
           </ol>
         </div>
 
