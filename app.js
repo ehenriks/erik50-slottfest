@@ -238,7 +238,7 @@ function applyExpiredMode() {
 }
 
 /* --------------------------------------------------------------------------
-   2. Mobile Navigation & Active Link Highlighting
+   2. Mobile Navigation & Active Link Highlighting (Optimized 60fps)
    -------------------------------------------------------------------------- */
 function initNavigation() {
   const menuBtn = document.getElementById('mobileMenuBtn');
@@ -259,22 +259,29 @@ function initNavigation() {
   const sections = document.querySelectorAll('section, header');
   const navItems = document.querySelectorAll('.nav-link');
 
+  let ticking = false;
   window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop - 150;
-      if (window.scrollY >= sectionTop) {
-        current = section.getAttribute('id');
-      }
-    });
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        let current = '';
+        const scrollPos = window.scrollY + 150;
+        sections.forEach(section => {
+          if (scrollPos >= section.offsetTop) {
+            current = section.getAttribute('id');
+          }
+        });
 
-    navItems.forEach(item => {
-      item.classList.remove('active');
-      if (item.getAttribute('href') === `#${current}`) {
-        item.classList.add('active');
-      }
-    });
-  });
+        navItems.forEach(item => {
+          item.classList.remove('active');
+          if (item.getAttribute('href') === `#${current}`) {
+            item.classList.add('active');
+          }
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
 }
 
 /* --------------------------------------------------------------------------
